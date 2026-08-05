@@ -81,8 +81,8 @@ Everything lives in `shared/config.lua`:
 - "Redeem Transaction" modal in the UI, or `/redeem [Transaction ID]` via chat
 
 **Staff:**
-- `/lojapendentes` — lists pending physical rewards (server console)
-- `/lojaenviado [id]` — marks a physical reward as shipped
+- `/twstore_pending` — lists pending physical rewards (server console)
+- `/twstore_sended [id]` — marks a physical reward as shipped
 
 ## Credits
 - Base Tebex code redemption system: **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**
