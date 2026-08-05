@@ -33,7 +33,7 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 - Loyalty milestones per number of consecutive active months, including **physical** rewards (merchandise shipped by mail, with a pending queue for staff: `/lojapendentes`, `/lojaenviado`)
 - **Multi-framework**: auto-detects **ESX**, **QBCore** or **QBox**, or can be forced manually
 - **Multi-inventory**: auto-detects **ox_inventory**, **qs-inventory**, or falls back to the framework's native inventory
-- Rewards this script doesn't implement natively (e.g. skill points, third-party store credit) fire an event (`luso_tebexstore:customReward`) for another resource to handle
+- Rewards this script doesn't implement natively (e.g. skill points, third-party store credit) fire an event (`tw_tebexstore:customReward`) for another resource to handle
 - Redeem attempts are logged to the server console (success/failure), in addition to Discord logs
 - Anti-exploit protections: the purchase command is only accepted from the console, vehicles are validated by a server-side callback before spawning, and suspicious attempts are reported to Discord
 
@@ -48,7 +48,7 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 
 1. Drop the resource into your server's `resources` folder
 2. Import `[INSTALL]/database.sql` into your database
-3. Add `ensure lusorp_tebex` to your `server.cfg`
+3. Add `ensure cfx_tw_tebex` to your `server.cfg`
 4. Set `sv_tebexSecret` in `server.cfg` — the resource won't start without it
 5. Configure `shared/config.lua` (see below)
 
@@ -61,7 +61,7 @@ purchase_package_tebex {"transid":"{transaction}", "packageid":{packageId}}
 - `packageid` is the package's numeric ID (preferred — doesn't break if you rename the package on Tebex). `packagename` is also accepted as an alternative/fallback.
 
 ### Garage
-Depending on the garage system your server uses, you may need to adapt the `lusorp_tebex:setVehicle` event in `server/server.lua` to match it.
+Depending on the garage system your server uses, you may need to adapt the `tw_tebex:setVehicle` event in `server/server.lua` to match it.
 
 ## Configuration
 
