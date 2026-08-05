@@ -1,5 +1,3 @@
-# TWTebex
-
 ![TWTebex banner](https://i.postimg.cc/sxh9s08z/Subscription-System.png)
 
 FiveM resource that connects your **Tebex** store to your server: processes purchases automatically, grants items/weapons/vehicles/money, manages **recurring VIP subscriptions** with loyalty-month tracking, and exposes its own in-game interface (`/store`) so players can check what they have and redeem transactions without leaving the game.
