@@ -30,7 +30,7 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 - Own UI (`/store`) — players see their active subscription, items received, perks, loyalty milestones and transaction history, and can redeem a Transaction ID without leaving the game (chat command `/redeem [Transaction ID]` still works as a fallback)
 - Recurring subscriptions (VIP tiers) with automatic active-months tracking, renewal, and automatic expiry when a subscription isn't renewed
 - Different rewards on first purchase vs. every renewal
-- Loyalty milestones per number of consecutive active months, including **physical** rewards (merchandise shipped by mail, with a pending queue for staff: `/lojapendentes`, `/lojaenviado`)
+- Loyalty milestones per number of consecutive active months, including **physical** rewards.
 - **Multi-framework**: auto-detects **ESX**, **QBCore** or **QBox**, or can be forced manually
 - **Multi-inventory**: auto-detects **ox_inventory**, **qs-inventory**, or falls back to the framework's native inventory
 - Rewards this script doesn't implement natively (e.g. skill points, third-party store credit) fire an event (`tw_tebexstore:customReward`) for another resource to handle
