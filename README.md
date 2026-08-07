@@ -53,7 +53,7 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 | Inventory | ox_inventory, qs-inventory, the framework's native inventory (auto-detected) |
 
 ## Installation
-Follow documention, [click here](https://cfxtw.vercel.app/).
+Follow Documentation, [click here](https://cfxtw.vercel.app/).
 
 ## Credits
 - Base Tebex code redemption system: **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**
