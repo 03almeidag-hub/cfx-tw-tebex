@@ -1,4 +1,4 @@
-local DiscordWebhook = 'https://discord.com/api/webhooks/1492590932594266122/c32QY51VG0NKTDsGPBT0Q_ywNwpoyiVZGQNtINmeMq3K6zqMLy9Nwm-HigJ58ufBnOTm'
+local DiscordWebhook = 'CHANGE_WEBHOOK'
 local inProgress = false
 local NumberCharset = {}
 local Charset = {}
