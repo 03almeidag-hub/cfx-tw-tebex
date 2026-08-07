@@ -55,6 +55,16 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 ## Installation
 Follow Documentation, [click here](https://cfxtw.vercel.app/).
 
+## Preview
+
+<div align="center">
+
+| Home Page | History | Redeem Modal |
+|:---:|:---:|:---:|
+| ![Home Page](https://i.imgur.com/Q7g3f1t.png) | ![History](https://i.imgur.com/xQETJqv.png) | ![Redeem Modal](https://i.imgur.com/9CO922Q.png) |
+
+</div>
+
 ## Credits
 - Base Tebex code redemption system: **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**
 - Original project support: [Discord](https://discord.gg/fz655NHeDq)
