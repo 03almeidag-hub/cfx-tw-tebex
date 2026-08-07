@@ -1,3 +1,7 @@
+Version: 1.0.3
+Updates:
+ - Fix TOCTOU race in RedeemTransaction (reward duplication)
+
 Version: 1.0.2
 Updates:
  - Fixed avatar_url typo in Discord webhook (bot avatar now shows correctly in Discord logs)
