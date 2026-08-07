@@ -65,6 +65,16 @@ Follow Documentation, [click here](https://cfxtw.vercel.app/).
 
 </div>
 
+## 💜 Supported by
+
+<p align="center">
+  <a href="https://lusoroleplay.pt/">
+    <img src="https://lusoroleplay.pt/data/imagens/logo.png" alt="LusoRoleplay" width="172" height="82">
+  </a>
+</p>
+
+This project is supported by **[LusoRoleplay](https://lusoroleplay.pt/)**. It was developed out of this server's own interest, and we decided to share this resource with the community.
+
 ## Credits
 - Base Tebex code redemption system: **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**
 - Original project support: [Discord](https://discord.gg/fz655NHeDq)
