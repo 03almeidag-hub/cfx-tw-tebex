@@ -38,6 +38,27 @@ Config.Locale = "pt"
 -- Override per-item with an `image` field (see examples below).
 Config.UseOxInventoryImages = "auto"
 
+-- Store UI accent colours. Applied as CSS custom properties on the NUI page.
+--   primary  → main buttons, active tab underline, scrollbar, badges
+--   accent   → hover states, glows, lighter highlights
+--   glow     → rgba box-shadow colour (include alpha)
+Config.UIColors = {
+    primary = "#1d4ed8",
+    accent  = "#3b82f6",
+    glow    = "rgba(59,130,246,.35)",
+}
+
+-- Logo shown in the store hero (top-left of the panel).
+-- Displayed at 60 × 60 px. Use a square PNG/WEBP for best results.
+-- Set to "" to hide the logo.
+Config.UILogo = "https://i.imgur.com/aSygWHc.png"
+
+-- Background image for the hero section.
+-- Recommended: at least 1 200 × 460 px, landscape/panoramic crop.
+-- The hero panel is 228 px tall — wide images are cropped to centre.
+-- Set to "" to use a solid dark gradient instead.
+Config.UIHeroBanner = "https://i.imgur.com/EKCBakf.png"
+
 
 -- ============================================================
 -- BUILT-IN REWARD TYPES — reference

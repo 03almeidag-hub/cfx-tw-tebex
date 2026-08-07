@@ -475,11 +475,58 @@ local function BuildStoreData(source)
 		useOxImages = Inventory.IsOx
 	end
 
+	local uiStrings = {
+		ui_date_locale          = _T('ui_date_locale'),
+		ui_tab_overview         = _T('ui_tab_overview'),
+		ui_tab_history          = _T('ui_tab_history'),
+		ui_hero_title           = _T('ui_hero_title'),
+		ui_hero_desc            = _T('ui_hero_desc'),
+		ui_hero_redeem_btn      = _T('ui_hero_redeem_btn'),
+		ui_redeem_title         = _T('ui_redeem_title'),
+		ui_redeem_hint          = _T('ui_redeem_hint'),
+		ui_redeem_btn           = _T('ui_redeem_btn'),
+		ui_redeem_loading       = _T('ui_redeem_loading'),
+		ui_subs_title           = _T('ui_subs_title'),
+		ui_subs_month_one       = _T('ui_subs_month_one'),
+		ui_subs_month_many      = _T('ui_subs_month_many'),
+		ui_subs_active_until    = _T('ui_subs_active_until'),
+		ui_subs_progress        = _T('ui_subs_progress'),
+		ui_subs_progress_done   = _T('ui_subs_progress_done'),
+		ui_subs_progress_month  = _T('ui_subs_progress_month'),
+		ui_subs_first_purchase  = _T('ui_subs_first_purchase'),
+		ui_subs_renewal         = _T('ui_subs_renewal'),
+		ui_subs_next_renewal    = _T('ui_subs_next_renewal'),
+		ui_subs_next_renewal_days = _T('ui_subs_next_renewal_days'),
+		ui_subs_privileges      = _T('ui_subs_privileges'),
+		ui_subs_empty           = _T('ui_subs_empty'),
+		ui_subs_empty_hint      = _T('ui_subs_empty_hint'),
+		ui_miles_title          = _T('ui_miles_title'),
+		ui_miles_desc           = _T('ui_miles_desc'),
+		ui_miles_month          = _T('ui_miles_month'),
+		ui_miles_unlocked       = _T('ui_miles_unlocked'),
+		ui_miles_locked         = _T('ui_miles_locked'),
+		ui_miles_physical       = _T('ui_miles_physical'),
+		ui_miles_physical_default = _T('ui_miles_physical_default'),
+		ui_miles_delivered      = _T('ui_miles_delivered'),
+		ui_history_title        = _T('ui_history_title'),
+		ui_history_desc         = _T('ui_history_desc'),
+		ui_history_vip          = _T('ui_history_vip'),
+		ui_history_package      = _T('ui_history_package'),
+		ui_history_empty        = _T('ui_history_empty'),
+		ui_history_empty_hint   = _T('ui_history_empty_hint'),
+		ui_scroll_prev          = _T('ui_scroll_prev'),
+		ui_scroll_next          = _T('ui_scroll_next'),
+	}
+
 	return {
 		activeTiers = activeTiers,
 		allTiers = allTiers,
 		transactionHistory = history,
 		useOxImages = useOxImages,
+		uiColors = Config.UIColors,
+		uiStrings = uiStrings,
+		uiLogo = Config.UILogo or "",
+		uiHeroBanner = Config.UIHeroBanner or "",
 	}
 end
 
