@@ -4,6 +4,7 @@ Updates:
 - Multilingual store interface (40 new locale keys, 13 languages)
 - Configurable logo & hero banner (Config.UILogo / Config.UIHeroBanner)
 - Store panel visual overhaul (fixed size, glass transparency, crystal corners)
+- Removed an incorrect Discord webhook from server/server.lua.
 
 Version: 1.0.0-beta
 Updates:
