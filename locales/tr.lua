@@ -8,6 +8,7 @@ Locales['tr'] = {
 	package_not_configured   = "%s paketi yapılandırılmamış. Staffla iletişime geç.",
 	package_redeemed         = "Paket kullanıldı: %s",
 	invalid_code             = "Geçersiz kod. Az önce satın aldıysan birkaç dakika içinde tekrar dene.",
+	redemption_in_progress   = "Bu kod zaten kullanılıyor. Biraz bekleyip tekrar dene.",
 	invalid_player           = "Geçersiz oyuncu.",
 	transaction_success      = "İşlem başarıyla kullanıldı!",
 	no_valid_packages        = "Bu işlemde geçerli paket bulunamadı.",

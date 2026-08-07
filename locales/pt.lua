@@ -8,6 +8,7 @@ Locales['pt'] = {
 	package_not_configured   = "O pacote %s não está configurado. Contacta a staff.",
 	package_redeemed         = "Resgataste o pacote: %s",
 	invalid_code             = "Código inválido. Se acabaste de comprar, tenta novamente dentro de alguns minutos.",
+	redemption_in_progress   = "Este código já está a ser resgatado. Aguarda um momento e tenta novamente.",
 	invalid_player           = "Jogador inválido.",
 	transaction_success      = "Transação resgatada com sucesso!",
 	no_valid_packages        = "Nenhum pacote válido encontrado nessa transação.",

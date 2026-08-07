@@ -8,6 +8,7 @@ Locales['ro'] = {
 	package_not_configured   = "Pachetul %s nu este configurat. Contactează staff-ul.",
 	package_redeemed         = "Ai revendicat pachetul: %s",
 	invalid_code             = "Cod invalid. Dacă tocmai ai cumpărat, încearcă din nou în câteva minute.",
+	redemption_in_progress   = "Acest cod este deja în curs de revendicare. Așteaptă un moment și încearcă din nou.",
 	invalid_player           = "Jucător invalid.",
 	transaction_success      = "Tranzacție revendicată cu succes!",
 	no_valid_packages        = "Nu s-au găsit pachete valide în acea tranzacție.",

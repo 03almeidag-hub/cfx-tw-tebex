@@ -8,6 +8,7 @@ Locales['zh'] = {
 	package_not_configured   = "套餐 %s 未配置，请联系工作人员。",
 	package_redeemed         = "您已兑换套餐：%s",
 	invalid_code             = "无效代码。如果您刚刚购买，请在几分钟后重试。",
+	redemption_in_progress   = "该代码正在兑换中。请稍候再试。",
 	invalid_player           = "无效玩家。",
 	transaction_success      = "交易兑换成功！",
 	no_valid_packages        = "该交易中未找到有效套餐。",

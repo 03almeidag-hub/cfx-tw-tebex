@@ -8,6 +8,7 @@ Locales['sv'] = {
 	package_not_configured   = "Paketet %s är inte konfigurerat. Kontakta personalen.",
 	package_redeemed         = "Du löste in paketet: %s",
 	invalid_code             = "Ogiltig kod. Om du nyss köpt, försök igen om några minuter.",
+	redemption_in_progress   = "Den här koden håller redan på att lösas in. Vänta en stund och försök igen.",
 	invalid_player           = "Ogiltig spelare.",
 	transaction_success      = "Transaktion löst in framgångsrikt!",
 	no_valid_packages        = "Inga giltiga paket hittades i den transaktionen.",

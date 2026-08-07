@@ -353,6 +353,9 @@ local function GrantLegacyPackage(source, player, pack)
 	return true
 end
 
+local activeRedemptions = {}
+local REDEMPTION_LOCK_TIMEOUT = 30000
+
 -- Redeems a Tebex transaction code for `source`. Used both by /redeem and the store UI modal.
 local function RedeemTransaction(source, encode, cb)
 	local player = GetPlayer(source)
@@ -363,8 +366,35 @@ local function RedeemTransaction(source, encode, cb)
 	end
 	local playerName = GetPlayerDisplayName(player, source)
 
+	if activeRedemptions[encode] then
+		local msg = _T('redemption_in_progress')
+		print(('^1[tw_tebexstore]: Redeem falhou (código já em processamento) | jogador: %s | source: %s | código: %s^0'):format(playerName, source, encode))
+		TriggerClientEvent('tw_tebexstore:notify', source, msg)
+		if cb then cb(false, msg) end
+		return
+	end
+
+	-- `lock` identifies this attempt so the timeout below never releases a lock taken by a later one.
+	local lock = {}
+	activeRedemptions[encode] = lock
+
+	local function Release()
+		if activeRedemptions[encode] == lock then
+			activeRedemptions[encode] = nil
+		end
+	end
+
+	-- Safety net in case the query callback never fires (dropped DB connection, resource error).
+	SetTimeout(REDEMPTION_LOCK_TIMEOUT, function()
+		if activeRedemptions[encode] == lock then
+			print(('^3[tw_tebexstore]: Lock expirado, libertado | código: %s^0'):format(encode))
+			activeRedemptions[encode] = nil
+		end
+	end)
+
 	MySQL.query('SELECT * FROM codes WHERE code = @playerCode', {['@playerCode'] = encode}, function(result)
 		if not result[1] then
+			Release()
 			local msg = _T('invalid_code')
 			print(('^1[tw_tebexstore]: Redeem falhou (código inválido) | jogador: %s | source: %s | código: %s^0'):format(playerName, source, encode))
 			TriggerClientEvent('tw_tebexstore:notify', source, msg)
@@ -375,30 +405,43 @@ local function RedeemTransaction(source, encode, cb)
 		local packs = json.decode(result[1].packagename)
 		local redeemedAny = false
 
-		for _, packageKey in pairs(packs) do
-			local tier = FindTierByPackageKey(packageKey)
-			local pack = not tier and FindPackageByKey(packageKey) or nil
-			if tier then
-				ProcessSubscriptionRenewal(source, player, tier, encode)
-				redeemedAny = true
-			elseif pack then
-				GrantLegacyPackage(source, player, pack)
-				TriggerClientEvent('tw_tebexstore:notify', source, _T('package_redeemed', pack.PackageName))
-				LogEvent('Código Resgatado', '**Pacote: **'..pack.PackageName..'\n**Jogador: **'..playerName, 3066993)
-				LogTransaction(GetIdentifier(player), encode, pack.PackageName, pack.PackageName, 'package')
-				redeemedAny = true
-			else
-				TriggerClientEvent('tw_tebexstore:notify', source, _T('package_not_configured', packageKey))
+		-- Rewards run inside pcall so a failure releases the lock and leaves the code in the database
+		-- for a retry, instead of the player paying and losing it.
+		local ok, err = pcall(function()
+			for _, packageKey in pairs(packs) do
+				local tier = FindTierByPackageKey(packageKey)
+				local pack = not tier and FindPackageByKey(packageKey) or nil
+				if tier then
+					ProcessSubscriptionRenewal(source, player, tier, encode)
+					redeemedAny = true
+				elseif pack then
+					GrantLegacyPackage(source, player, pack)
+					TriggerClientEvent('tw_tebexstore:notify', source, _T('package_redeemed', pack.PackageName))
+					LogEvent('Código Resgatado', '**Pacote: **'..pack.PackageName..'\n**Jogador: **'..playerName, 3066993)
+					LogTransaction(GetIdentifier(player), encode, pack.PackageName, pack.PackageName, 'package')
+					redeemedAny = true
+				else
+					TriggerClientEvent('tw_tebexstore:notify', source, _T('package_not_configured', packageKey))
+				end
 			end
+		end)
+
+		if not ok then
+			Release()
+			print(('^1[tw_tebexstore]: Redeem falhou (erro ao entregar prémios) | jogador: %s | source: %s | código: %s | erro: %s^0'):format(playerName, source, encode, tostring(err)))
+			LogEvent('Erro no Resgate', '**Jogador: **'..playerName..'\n**Código: **'..encode..'\n**Erro: **'..tostring(err), 15158332)
+			if cb then cb(false, "Erro ao processar a transação. Tenta novamente.") end
+			return
 		end
 
-		MySQL.query.await('DELETE FROM codes WHERE code = @playerCode', {['@playerCode'] = encode})
-
 		if redeemedAny then
+			MySQL.query.await('DELETE FROM codes WHERE code = @playerCode', {['@playerCode'] = encode})
 			print(('^2[tw_tebexstore]: Redeem com sucesso | jogador: %s | source: %s | código: %s^0'):format(playerName, source, encode))
 		else
 			print(('^1[tw_tebexstore]: Redeem falhou (nenhum pacote válido) | jogador: %s | source: %s | código: %s^0'):format(playerName, source, encode))
 		end
+
+		Release()
 
 		if cb then cb(redeemedAny, redeemedAny and _T('transaction_success') or _T('no_valid_packages')) end
 	end)

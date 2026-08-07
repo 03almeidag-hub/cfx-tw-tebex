@@ -8,6 +8,7 @@ Locales['en'] = {
 	package_not_configured   = "Package %s is not configured. Contact staff.",
 	package_redeemed         = "You redeemed package: %s",
 	invalid_code             = "Invalid code. If you just purchased, try again in a few minutes.",
+	redemption_in_progress   = "This code is already being redeemed. Wait a moment and try again.",
 	invalid_player           = "Invalid player.",
 	transaction_success      = "Transaction redeemed successfully!",
 	no_valid_packages        = "No valid packages found in that transaction.",

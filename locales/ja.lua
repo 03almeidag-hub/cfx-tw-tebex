@@ -8,6 +8,7 @@ Locales['ja'] = {
 	package_not_configured   = "パッケージ %s は設定されていません。スタッフに連絡してください。",
 	package_redeemed         = "パッケージを引き換えました：%s",
 	invalid_code             = "無効なコードです。購入直後の場合は、数分後に再試行してください。",
+	redemption_in_progress   = "このコードは現在引き換え処理中です。少し待ってから再試行してください。",
 	invalid_player           = "無効なプレイヤーです。",
 	transaction_success      = "トランザクションが正常に引き換えられました！",
 	no_valid_packages        = "このトランザクションに有効なパッケージが見つかりませんでした。",
