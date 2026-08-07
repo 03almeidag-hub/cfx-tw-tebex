@@ -53,44 +53,7 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 | Inventory | ox_inventory, qs-inventory, the framework's native inventory (auto-detected) |
 
 ## Installation
-
-1. Drop the resource into your server's `resources` folder
-2. Import `[INSTALL]/database.sql` into your database
-3. Add `ensure cfx_tw_tebex` to your `server.cfg`
-4. Set `sv_tebexSecret` in `server.cfg` — the resource won't start without it
-5. Configure `shared/config.lua` (see below)
-
-### Tebex
-On the package (one-off or recurring), under **Store Commands**, set the command executed on purchase:
-```
-purchase_package_tebex {"transid":"{transaction}", "packageid":{packageId}}
-```
-- Enable **"Execute the command even if the player is offline"**
-- `packageid` is the package's numeric ID (preferred — doesn't break if you rename the package on Tebex). `packagename` is also accepted as an alternative/fallback.
-
-### Garage
-Depending on the garage system your server uses, you may need to adapt the `tw_tebex:setVehicle` event in `server/server.lua` to match it.
-
-## Configuration
-
-Everything lives in `shared/config.lua`:
-- `Config.Framework` — `"auto"` (recommended), or force `"ESX"` / `"QB"` / `"QBX"`
-- `Config.Tiers` — each VIP tier: `PackageId`/`PackageName`, `Group`, `MaxWeight`, `Privileges`, and rewards (`FirstPurchaseRewards`, `RenewalRewards`, `Items`)
-- `Config.Packages` — one-off (non-recurring) packages
-- `Config.Milestones` — rewards per number of consecutive active months, per tier
-- `Config.SubscriptionDays` — length of each subscription period (30 days by default)
-- `Config.StoreCommand` — command that opens the store UI (`/store`)
-- `Config.UseOxInventoryImages` — `"auto"` (follows inventory detection) or force `true`/`false`; each item also accepts a custom `image` field
-
-## Usage
-
-**Player:**
-- `/store` opens the store: active subscription, items, perks, loyalty milestones and transaction history
-- "Redeem Transaction" modal in the UI, or `/redeem [Transaction ID]` via chat
-
-**Staff:**
-- `/twstore_pending` — lists pending physical rewards (server console)
-- `/twstore_sended [id]` — marks a physical reward as shipped
+Follow documention, [click here](https://cfxtw.vercel.app/).
 
 ## Credits
 - Base Tebex code redemption system: **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**
