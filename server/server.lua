@@ -354,10 +354,19 @@ local function GrantLegacyPackage(source, player, pack)
 end
 
 local activeRedemptions = {}
-local REDEMPTION_LOCK_TIMEOUT = 30000
+-- Kept well above realistic granting time so the safety net can never release a lock while a
+-- redemption is still handing out rewards, which would re-open the duplication window.
+local REDEMPTION_LOCK_TIMEOUT = 60000
 
 -- Redeems a Tebex transaction code for `source`. Used both by /redeem and the store UI modal.
 local function RedeemTransaction(source, encode, cb)
+	-- The /redeem command guards this, but the NUI callback passes `code` straight through, so a
+	-- nil/empty value would blow up on `activeRedemptions[encode] = lock` ("table index is nil").
+	if not encode or encode == '' then
+		if cb then cb(false, _T('invalid_code')) end
+		return
+	end
+
 	local player = GetPlayer(source)
 	if not player then
 		print(('^1[tw_tebexstore]: Redeem falhou (jogador inválido) | source: %s | código: %s^0'):format(source, encode))
