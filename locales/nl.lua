@@ -8,6 +8,7 @@ Locales['nl'] = {
 	package_not_configured   = "Pakket %s is niet geconfigureerd. Neem contact op met de staff.",
 	package_redeemed         = "Je hebt pakket ingewisseld: %s",
 	invalid_code             = "Ongeldige code. Als je net hebt gekocht, probeer het over een paar minuten opnieuw.",
+	redemption_in_progress   = "Deze code wordt al ingewisseld. Wacht even en probeer het opnieuw.",
 	invalid_player           = "Ongeldige speler.",
 	transaction_success      = "Transactie succesvol ingewisseld!",
 	no_valid_packages        = "Geen geldige pakketten gevonden in die transactie.",
