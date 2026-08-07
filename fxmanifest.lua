@@ -20,7 +20,7 @@ game 'gta5'
 
 author '.tribalwars <https://github.com/03almeidag-hub>'
 description 'Tebex Store Reward Redemption System - TW-TebexStore'
-version '1.0.0'
+version '1.0.2'
 credits 'najeetpie - https://github.com/najeetpie/nass_tebexstore'
 
 shared_scripts {
