@@ -1,1 +1,657 @@
 
+<title>TWTEBEX — Documentation</title>
+<style>
+:root{
+  --bg:#07090f;--surface:rgba(255,255,255,.04);--surface-h:rgba(255,255,255,.07);
+  --border:rgba(255,255,255,.08);--border-h:rgba(59,130,246,.4);
+  --text:#dde4f5;--text-muted:#5a6680;--text-faint:#2e3a55;
+  --accent:#3b82f6;--accent-dim:rgba(59,130,246,.12);
+  --green:#22c55e;--amber:#f59e0b;--purple:#a78bfa;
+  --code-bg:rgba(59,130,246,.07);--r:10px;--r-sm:6px;
+  --sb-l:270px;--sb-r:240px;
+}
+:root[data-theme=light]{
+  --bg:#f0f4fb;--surface:rgba(255,255,255,.85);--surface-h:#fff;
+  --border:rgba(0,0,0,.07);--border-h:rgba(59,130,246,.35);
+  --text:#0f172a;--text-muted:#64748b;--text-faint:#94a3b8;
+  --code-bg:rgba(59,130,246,.06);--surface-h:rgba(255,255,255,.95);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:17px}
+body{font-family:'Montserrat','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;min-height:100vh;display:flex;overflow-x:hidden}
+body::before{content:'';position:fixed;width:480px;height:480px;top:-120px;left:80px;background:radial-gradient(circle,#1a3a8a,transparent 70%);filter:blur(80px);opacity:.22;pointer-events:none;z-index:0}
+
+/* ── SIDEBAR LEFT ── */
+.sb-l{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sb-l);
+  background:rgba(7,9,15,.9);backdrop-filter:blur(20px);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;
+}
+.sb-brand{padding:1.1rem 1rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;gap:.65rem}
+.sb-logo{font-weight:900;font-size:1.1rem;letter-spacing:-.02em;flex:1}
+.tw{background:linear-gradient(120deg,#1e6fdb,#60a5fa,#93c5fd,#3b82f6,#1d4ed8);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(59,130,246,.45))}
+@keyframes shimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.btn-theme{background:none;border:1px solid var(--border);border-radius:5px;padding:.22rem .48rem;cursor:pointer;font-size:.65rem;color:var(--text-muted);font-family:inherit;transition:all .15s;flex-shrink:0}
+.btn-theme:hover{color:var(--text);border-color:var(--accent)}
+
+/* Search */
+.sb-search{padding:.65rem .9rem .55rem;flex-shrink:0;border-bottom:1px solid var(--border)}
+.search-wrap{position:relative}
+.search-ico{position:absolute;left:.55rem;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:.7rem;pointer-events:none}
+.search-inp{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.35rem .5rem .35rem 1.6rem;font-size:.73rem;font-family:inherit;color:var(--text);outline:none;transition:border-color .15s}
+.search-inp:focus{border-color:var(--border-h)}
+.search-inp::placeholder{color:var(--text-faint)}
+
+/* Nav tree */
+.sb-scroll{flex:1;overflow-y:auto;padding:.4rem 0 2rem}
+.sb-scroll::-webkit-scrollbar{width:3px}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.proj-header{display:flex;align-items:center;gap:.55rem;padding:.5rem .9rem .5rem .85rem;cursor:pointer;user-select:none;transition:background .12s}
+.proj-header:hover{background:var(--surface-h)}
+.proj-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.proj-name{font-size:.78rem;font-weight:700;flex:1}
+.proj-badge{font-size:.55rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.12rem .38rem;border-radius:50px;background:var(--accent-dim);color:var(--accent);border:1px solid rgba(59,130,246,.2)}
+.proj-arrow{font-size:.55rem;color:var(--text-faint);transition:transform .18s;flex-shrink:0}
+.proj-arrow.open{transform:rotate(90deg)}
+
+.proj-nav{overflow:hidden;max-height:0;transition:max-height .22s ease}
+.proj-nav.open{max-height:700px}
+
+.nav-group-label{font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint);padding:.7rem .85rem .22rem 1.7rem}
+.nav-link{display:flex;align-items:center;gap:.45rem;padding:.28rem .7rem .28rem 1.65rem;color:var(--text-muted);text-decoration:none;font-size:.75rem;font-weight:500;transition:background .1s,color .1s;border-left:2px solid transparent;margin:0 .45rem;border-radius:0 var(--r-sm) var(--r-sm) 0;cursor:pointer}
+.nav-link:hover{background:var(--surface-h);color:var(--text)}
+.nav-link.active{color:var(--accent);background:var(--accent-dim);border-left-color:var(--accent)}
+.nav-link.hidden-search{display:none}
+.nav-link .ico{width:12px;text-align:center;font-style:normal;font-size:.68rem;flex-shrink:0}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sb-l);margin-right:var(--sb-r);flex:1;position:relative;z-index:1;min-height:100vh}
+.page{display:none;padding:2.8rem 2.2rem 5rem;max-width:720px;margin:0 auto;animation:fadein .18s ease}
+.page.active{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ── SIDEBAR RIGHT ── */
+.sb-r{
+  position:fixed;top:0;right:0;bottom:0;width:var(--sb-r);
+  background:rgba(7,9,15,.85);backdrop-filter:blur(18px);
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;overflow:hidden;
+}
+.sb-r-head{padding:.95rem 1rem .8rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-r-title{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--text-faint)}
+.sb-r-scroll{flex:1;overflow-y:auto;padding:.55rem .85rem 2rem}
+.sb-r-scroll::-webkit-scrollbar{width:3px}
+.sb-r-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+.ctx-block{margin-bottom:1.1rem}
+.ctx-label{font-size:.56rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-faint);margin-bottom:.45rem;padding-bottom:.3rem;border-bottom:1px solid var(--border)}
+.ctx-item{padding:.42rem .5rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:.3rem;transition:border-color .15s;cursor:default}
+.ctx-item:hover{border-color:var(--border-h)}
+.ctx-sig{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;color:#a78bfa;line-height:1.4;word-break:break-word}
+.ctx-desc{font-size:.67rem;color:var(--text-muted);margin-top:.18rem;line-height:1.45}
+.ctx-chip{display:inline-flex;align-items:center;font-size:.58rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.12rem .38rem;border-radius:50px;margin:.08rem .05rem;gap:.25rem}
+.chip-ev{background:rgba(34,197,94,.09);color:#86efac;border:1px solid rgba(34,197,94,.2)}
+.chip-exp{background:rgba(167,139,250,.09);color:#c4b5fd;border:1px solid rgba(167,139,250,.2)}
+.chip-db{background:rgba(251,191,36,.09);color:#fcd34d;border:1px solid rgba(251,191,36,.2)}
+
+/* ── PAGE CONTENT ── */
+.hero-eyebrow{font-size:.58rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem}
+.hero-title{font-size:2.8rem;font-weight:900;letter-spacing:-.04em;line-height:1;margin-bottom:.9rem}
+.tw-d{background:linear-gradient(120deg,#1e6fdb,#60a5fa,#93c5fd,#3b82f6);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(59,130,246,.4))}
+.hero-desc{font-size:.88rem;color:var(--text-muted);max-width:500px;line-height:1.75;margin-bottom:1.2rem}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.6rem}
+.tag{font-size:.6rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:.2rem .55rem;border-radius:50px;border:1px solid var(--border);color:var(--text-muted);background:var(--surface)}
+
+.s-title{font-size:1.3rem;font-weight:800;letter-spacing:-.025em;margin-bottom:.25rem}
+.s-sub{font-size:.82rem;color:var(--text-muted);margin-bottom:1.3rem;max-width:480px;line-height:1.6}
+p{margin-bottom:.75rem;color:var(--text);font-size:.84rem;line-height:1.7}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1rem 1.2rem;margin-bottom:.75rem;transition:border-color .18s}
+.card:hover{border-color:var(--border-h)}
+.card-label{font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem}
+
+pre{background:var(--code-bg);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--r-sm);padding:.85rem 1rem;overflow-x:auto;margin:.75rem 0;font-size:.74rem;line-height:1.6}
+code{font-family:'JetBrains Mono','Cascadia Code',ui-monospace,monospace;font-size:.79em;background:var(--code-bg);padding:.1em .32em;border-radius:3px;color:#93c5fd}
+pre code{background:none;padding:0;font-size:1em;color:var(--text)}
+.kw{color:#60a5fa}.str{color:#86efac}.cmt{color:var(--text-faint);font-style:italic}.num{color:#fda4af}.fn{color:#c4b5fd}.key{color:#fcd34d}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.55rem;margin:.75rem 0}
+.g-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.75rem .85rem;transition:border-color .15s}
+.g-card:hover{border-color:var(--border-h)}
+.g-type{display:inline-block;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.62rem;font-weight:700;color:#93c5fd;background:var(--accent-dim);padding:.1em .4em;border-radius:3px;margin-bottom:.35rem}
+.g-name{font-size:.77rem;font-weight:700;margin-bottom:.15rem}
+.g-desc{font-size:.68rem;color:var(--text-muted);line-height:1.5}
+
+.callout{display:flex;gap:.65rem;padding:.65rem .85rem;border-radius:var(--r-sm);margin:.75rem 0;font-size:.76rem;line-height:1.6;border:1px solid}
+.callout.info{background:rgba(59,130,246,.07);border-color:rgba(59,130,246,.2);color:#93c5fd}
+.callout.warn{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.2);color:#fcd34d}
+.callout.tip{background:rgba(34,197,94,.07);border-color:rgba(34,197,94,.2);color:#86efac}
+
+.steps{display:flex;flex-direction:column;gap:.32rem}
+.step{display:grid;grid-template-columns:24px 1fr;gap:.65rem;align-items:start}
+.step-n{width:24px;height:24px;border-radius:50%;background:var(--accent-dim);border:1px solid rgba(59,130,246,.25);display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;color:var(--accent);flex-shrink:0;margin-top:.15rem}
+.step-b{font-size:.82rem;line-height:1.65}
+.step-t{font-weight:700;color:var(--text);margin-bottom:.2rem}
+
+.tbl-wrap{overflow-x:auto;border-radius:var(--r);border:1px solid var(--border);margin:.75rem 0}
+table{width:100%;border-collapse:collapse}
+th{font-size:.57rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);padding:.48rem .8rem;text-align:left;border-bottom:1px solid var(--border)}
+td{font-size:.74rem;padding:.55rem .8rem;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--surface)}
+.td-k{font-family:'JetBrains Mono',ui-monospace,monospace;color:#93c5fd;font-size:.7rem;white-space:nowrap}
+.td-d{font-family:'JetBrains Mono',ui-monospace,monospace;color:#86efac;font-size:.68rem;white-space:nowrap}
+
+.ev-list{display:flex;flex-direction:column;gap:.4rem}
+.ev-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.65rem .85rem;transition:border-color .15s}
+.ev-row:hover{border-color:var(--border-h)}
+.ev-name{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.67rem;font-weight:700;color:#93c5fd;margin-bottom:.15rem}
+.ev-params{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.63rem;color:var(--text-faint);margin-bottom:.18rem}
+.ev-desc{font-size:.73rem;color:var(--text);line-height:1.5}
+
+.exp-list{display:flex;flex-direction:column;gap:.38rem}
+.exp-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.65rem .85rem;transition:border-color .15s}
+.exp-item:hover{border-color:var(--border-h)}
+.exp-sig{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.68rem;color:#c4b5fd;margin-bottom:.2rem;font-weight:700}
+.exp-desc{font-size:.73rem;color:var(--text-muted);line-height:1.45}
+
+.lang-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin:.6rem 0}
+.lang-pill{display:flex;align-items:center;gap:.3rem;padding:.2rem .6rem;border-radius:50px;background:var(--surface);border:1px solid var(--border);font-size:.67rem;font-weight:600;color:var(--text-muted)}
+.l-code{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--accent);font-size:.64rem}
+</style>
+
+<!-- LEFT SIDEBAR -->
+<aside class="sb-l">
+  <div class="sb-brand">
+    <div class="sb-logo"><span class="tw">TW</span>DOCS</div>
+    <button class="btn-theme" onclick="toggleTheme()"><span id="ti">☀</span></button>
+  </div>
+  <div class="sb-search">
+    <div class="search-wrap">
+      <span class="search-ico">⌕</span>
+      <input class="search-inp" id="searchInp" type="text" placeholder="Search…" oninput="doSearch(this.value)" autocomplete="off">
+    </div>
+  </div>
+  <div class="sb-scroll">
+    <!-- Project: tw-tebexstore -->
+    <div class="proj-header" onclick="toggleProj('tw',this)">
+      <span class="proj-dot" style="background:var(--accent)"></span>
+      <span class="proj-name">tw-tebexstore</span>
+      <span class="proj-badge">v1.0</span>
+      <span class="proj-arrow open" id="arrow-tw">▶</span>
+    </div>
+    <div class="proj-nav open" id="nav-tw">
+      <div class="nav-group-label">Getting Started</div>
+      <a class="nav-link active" data-proj="tw" data-page="intro"    onclick="showPage('intro',this)"><i class="ico">◈</i> Introduction</a>
+      <a class="nav-link" data-proj="tw" data-page="reqs"     onclick="showPage('reqs',this)"><i class="ico">◎</i> Requirements</a>
+      <a class="nav-link" data-proj="tw" data-page="install"  onclick="showPage('install',this)"><i class="ico">↓</i> Installation</a>
+      <div class="nav-group-label">Configuration</div>
+      <a class="nav-link" data-proj="tw" data-page="config"   onclick="showPage('config',this)"><i class="ico">⚙</i> Config Options</a>
+      <a class="nav-link" data-proj="tw" data-page="rewards"  onclick="showPage('rewards',this)"><i class="ico">◆</i> Reward Types</a>
+      <a class="nav-link" data-proj="tw" data-page="handlers" onclick="showPage('handlers',this)"><i class="ico">↔</i> Custom Handlers</a>
+      <a class="nav-link" data-proj="tw" data-page="tiers"    onclick="showPage('tiers',this)"><i class="ico">▲</i> Tiers & Packages</a>
+      <div class="nav-group-label">Systems</div>
+      <a class="nav-link" data-proj="tw" data-page="locales"  onclick="showPage('locales',this)"><i class="ico">◉</i> Locales / i18n</a>
+      <a class="nav-link" data-proj="tw" data-page="groups"   onclick="showPage('groups',this)"><i class="ico">◇</i> Groups & Perms</a>
+      <a class="nav-link" data-proj="tw" data-page="events"   onclick="showPage('events',this)"><i class="ico">⟳</i> Events</a>
+      <a class="nav-link" data-proj="tw" data-page="garage"   onclick="showPage('garage',this)"><i class="ico">▣</i> Garage Bridge</a>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- intro -->
+  <div class="page active" id="page-intro">
+    <div class="hero-eyebrow">FiveM · Tebex Integration</div>
+    <h1 class="hero-title"><span class="tw-d">TW</span>TEBEX</h1>
+    <p class="hero-desc">Multi-framework Tebex reward redemption for FiveM. Handles webhooks, subscription tiers, one-off packages, vehicle rewards, custom inventory bridges, and a fully independent permission system.</p>
+    <div class="tags">
+      <span class="tag">ESX</span><span class="tag">QBCore</span><span class="tag">QBox</span>
+      <span class="tag">ox_inventory</span><span class="tag">qs-inventory</span>
+      <span class="tag">jg-advancedgarages</span><span class="tag">oxmysql</span>
+    </div>
+    <div class="grid2" style="margin-top:1.4rem">
+      <div class="g-card"><div class="g-name">Tiers</div><div class="g-desc">Recurring subscriptions with first-purchase, renewal, and per-payment rewards.</div></div>
+      <div class="g-card"><div class="g-name">Packages</div><div class="g-desc">One-off purchases granting items, money, vehicles, or custom rewards.</div></div>
+      <div class="g-card"><div class="g-name">Revoke</div><div class="g-desc">Cancellation/refund hooks call handlers and fire events automatically.</div></div>
+      <div class="g-card"><div class="g-name">15+ Locales</div><div class="g-desc">All player notifications translated, with sub-locale fallback.</div></div>
+    </div>
+  </div>
+
+  <!-- reqs -->
+  <div class="page" id="page-reqs">
+    <div class="s-title">Requirements</div>
+    <p class="s-sub">Everything you need before installing.</p>
+    <div class="grid2">
+      <div class="g-card"><div class="g-type">required</div><div class="g-name">oxmysql</div><div class="g-desc">Must start before this resource.</div></div>
+      <div class="g-card"><div class="g-type">required</div><div class="g-name">ESX / QBCore / QBox</div><div class="g-desc">One framework. Auto-detected or set manually.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">ox_inventory</div><div class="g-desc">SetMaxWeight + item images.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">qs-inventory</div><div class="g-desc">Item and weapon grants.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">jg-advancedgarages</div><div class="g-desc">Direct DB insert for vehicle rewards.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">cd_garage</div><div class="g-desc">Alternative garage bridge.</div></div>
+    </div>
+  </div>
+
+  <!-- install -->
+  <div class="page" id="page-install">
+    <div class="s-title">Installation</div>
+    <p class="s-sub">Four steps from download to live store.</p>
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><div class="step-b"><div class="step-t">Import the database</div><p>Run <code>[INSTALL]/database.sql</code>. Creates <code>tw_subscriptions</code>, <code>tw_transaction_log</code>, <code>tw_milestones_claimed</code>, <code>tw_physical_claims</code>, <code>tw_permissions</code>.</p></div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-b"><div class="step-t">Add to server.cfg</div>
+<pre><code><span class="kw">set</span> sv_tebexSecret <span class="str">"YOUR_SECRET_HERE"</span>
+<span class="kw">ensure</span> oxmysql
+<span class="kw">ensure</span> es_extended     <span class="cmt"># or qb-core / qbx_core</span>
+<span class="kw">ensure</span> cfx_tw-tebexstore</code></pre>
+      </div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-b"><div class="step-t">Configure Tebex webhooks</div>
+<pre><code><span class="cmt"># On Purchase — set as "Commands → Run on Purchase"</span>
+purchase_package_tebex <span class="str">{"transid":"{transaction}","packageid":{packageId}}</span>
+<span class="cmt"># On Refund / Chargeback</span>
+revoke_package_tebex <span class="str">{"transid":"{transaction}","packageid":{packageId},"reason":"refunded"}</span></code></pre>
+      </div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-b"><div class="step-t">Configure and start</div><p>Edit <code>shared/config.lua</code>. Set your Package IDs, locale, garage system, inventory system. Start and test with <code>/loja</code> in-game.</p></div></div>
+    </div>
+  </div>
+
+  <!-- config -->
+  <div class="page" id="page-config">
+    <div class="s-title">Config Options</div>
+    <p class="s-sub">All settings are in <code>shared/config.lua</code>.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Key</th><th>Default</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><span class="td-k">Config.Framework</span></td><td><span class="td-d">"auto"</span></td><td>Auto-detects ESX/QB/QBX. Force: <code>"ESX"</code>, <code>"QB"</code>, <code>"QBX"</code>.</td></tr>
+          <tr><td><span class="td-k">Config.Locale</span></td><td><span class="td-d">"pt"</span></td><td>Player notification language code.</td></tr>
+          <tr><td><span class="td-k">Config.StoreCommand</span></td><td><span class="td-d">"loja"</span></td><td>Command to open the store UI.</td></tr>
+          <tr><td><span class="td-k">Config.SubscriptionDays</span></td><td><span class="td-d">30</span></td><td>Days one payment covers.</td></tr>
+          <tr><td><span class="td-k">Config.ExpiryCheckInterval</span></td><td><span class="td-d">5</span></td><td>Minutes between expiry sweeps.</td></tr>
+          <tr><td><span class="td-k">Config.CarRewardGarage</span></td><td><span class="td-d">"legion"</span></td><td>Garage ID where vehicle rewards land.</td></tr>
+          <tr><td><span class="td-k">Config.GarageSystem</span></td><td><span class="td-d">"auto"</span></td><td>Force: <code>"jg"</code>, <code>"cd"</code>, <code>"default"</code>.</td></tr>
+          <tr><td><span class="td-k">Config.InventorySystem</span></td><td><span class="td-d">"auto"</span></td><td>Force: <code>"ox"</code>, <code>"qs"</code>, <code>"native"</code>, <code>"custom"</code>.</td></tr>
+          <tr><td><span class="td-k">Config.DiscordLogs</span></td><td><span class="td-d">true</span></td><td>Enable Discord webhook logging.</td></tr>
+          <tr><td><span class="td-k">Config.UseOxInventoryImages</span></td><td><span class="td-d">"auto"</span></td><td>Use ox item images in UI. Override per-item with <code>image = "…"</code>.</td></tr>
+          <tr><td><span class="td-k">Config.SpaceInLicensePlate</span></td><td><span class="td-d">false</span></td><td><code>true</code> → "ABC 123", <code>false</code> → "ABC123".</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- rewards -->
+  <div class="page" id="page-rewards">
+    <div class="s-title">Reward Types</div>
+    <p class="s-sub">Each reward entry has a <code>type</code>. Built-in types are handled automatically; anything else routes to <code>Config.RewardHandlers</code> or the fallback event.</p>
+    <div class="grid2">
+      <div class="g-card"><div class="g-type">item</div><div class="g-name">Inventory Item</div><div class="g-desc"><code>name</code> = item name, <code>amount</code> = qty.</div></div>
+      <div class="g-card"><div class="g-type">weapon</div><div class="g-name">Weapon + Ammo</div><div class="g-desc"><code>name</code> = hash string, <code>amount</code> = ammo count.</div></div>
+      <div class="g-card"><div class="g-type">account</div><div class="g-name">Money</div><div class="g-desc"><code>name</code> = "bank"/"cash", <code>amount</code> = value.</div></div>
+      <div class="g-card"><div class="g-type">car</div><div class="g-name">Vehicle</div><div class="g-desc"><code>model</code> = spawn name. Plate auto-generated. Goes straight to garage DB.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#fcd34d;background:rgba(245,158,11,.1)">physical</div><div class="g-name">Physical Reward</div><div class="g-desc">Logged for staff to fulfil. Milestones only.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#c4b5fd;background:rgba(167,139,250,.1)">custom</div><div class="g-name">Anything else</div><div class="g-desc">Routes to <code>RewardHandlers</code> or fires <code>tw_tebexstore:customReward</code>.</div></div>
+    </div>
+<pre><code>{ <span class="key">type</span>=<span class="str">"item"</span>,    <span class="key">name</span>=<span class="str">"lockpick"</span>,      <span class="key">amount</span>=<span class="num">5</span>,     <span class="key">label</span>=<span class="str">"5x Lockpick"</span> }
+{ <span class="key">type</span>=<span class="str">"weapon"</span>,  <span class="key">name</span>=<span class="str">"WEAPON_PISTOL"</span>,  <span class="key">amount</span>=<span class="num">120</span>,  <span class="key">label</span>=<span class="str">"Pistol + Ammo"</span> }
+{ <span class="key">type</span>=<span class="str">"account"</span>, <span class="key">name</span>=<span class="str">"bank"</span>,           <span class="key">amount</span>=<span class="num">50000</span>, <span class="key">label</span>=<span class="str">"$50,000 Bank"</span> }
+{ <span class="key">type</span>=<span class="str">"car"</span>,     <span class="key">model</span>=<span class="str">"sultanrs"</span>,      <span class="key">label</span>=<span class="str">"Sultan RS"</span> }
+{ <span class="key">type</span>=<span class="str">"physical"</span>, <span class="key">label</span>=<span class="str">"TW T-Shirt"</span>,   <span class="key">image</span>=<span class="str">"img/tshirt.png"</span> }</code></pre>
+  </div>
+
+  <!-- handlers -->
+  <div class="page" id="page-handlers">
+    <div class="s-title">Custom Handlers</div>
+    <p class="s-sub">Map any custom reward <code>type</code> to direct export calls. <code>grant</code> fires on purchase, <code>revoke</code> on cancellation or refund.</p>
+    <div class="callout info"><span>ℹ</span><span>When a handler is defined for a type, <code>tw_tebexstore:customReward</code> is NOT fired for that type — the handler IS the implementation.</span></div>
+<pre><code>Config.RewardHandlers = {
+    <span class="key">skillpoints</span> = {
+        <span class="key">grant</span>  = <span class="kw">function</span>(src, amount)
+            exports[<span class="str">'your_skilltree'</span>]:AddPoints(src, amount)
+        <span class="kw">end</span>,
+        <span class="key">revoke</span> = <span class="kw">function</span>(src, amount)
+            exports[<span class="str">'your_skilltree'</span>]:RemovePoints(src, amount)
+        <span class="kw">end</span>,
+    },
+    <span class="key">invweight</span> = {
+        <span class="key">grant</span>  = <span class="kw">function</span>(src, amount)
+            <span class="kw">local</span> cur = exports.ox_inventory:GetMaxWeight(src)
+            exports.ox_inventory:SetMaxWeight(src, cur + amount * <span class="num">1000</span>)
+        <span class="kw">end</span>,
+        <span class="key">revoke</span> = <span class="kw">function</span>(src, amount)
+            <span class="kw">local</span> cur = exports.ox_inventory:GetMaxWeight(src)
+            exports.ox_inventory:SetMaxWeight(src, cur - amount * <span class="num">1000</span>)
+        <span class="kw">end</span>,
+    },
+    <span class="key">storecredit</span> = {
+        <span class="key">grant</span> = <span class="kw">function</span>(src, amount)
+            exports[<span class="str">'your_standvip'</span>]:AddCredit(src, amount)
+        <span class="kw">end</span>,
+        <span class="cmt">-- no revoke: credits are non-refundable</span>
+    },
+}</code></pre>
+    <div class="callout warn"><span>⚠</span><span>Built-in types (<code>item</code>, <code>weapon</code>, <code>account</code>, <code>car</code>) are never auto-revoked — items may already be consumed or sold.</span></div>
+  </div>
+
+  <!-- tiers -->
+  <div class="page" id="page-tiers">
+    <div class="s-title">Tiers &amp; Packages</div>
+    <p class="s-sub">Tiers are recurring subscriptions. Packages are one-off purchases.</p>
+    <div class="card">
+      <div class="card-label">Subscription Tier</div>
+<pre style="margin:0"><code>{
+  <span class="key">id</span>          = <span class="str">"benfeitor"</span>,
+  <span class="key">PackageId</span>   = <span class="num">7455661</span>,
+  <span class="key">PackageName</span> = <span class="str">"Passe Benfeitor"</span>,
+  <span class="key">Label</span>       = <span class="str">"Passe Benfeitor"</span>,
+  <span class="key">Group</span>       = <span class="str">"vip_benfeitor"</span>,
+  <span class="key">MaxWeight</span>   = <span class="num">100000</span>,
+  <span class="key">Privileges</span>  = { <span class="str">"100 kg inventory"</span>, <span class="str">"Queue priority"</span> },
+
+  <span class="key">FirstPurchaseRewards</span> = { <span class="cmt">--[[ once, on first sub ]]</span> },
+  <span class="key">RenewalRewards</span>       = { <span class="cmt">--[[ every renewal ]]</span> },
+  <span class="key">Items</span>                = { <span class="cmt">--[[ every payment incl. first ]]</span> },
+}</code></pre>
+    </div>
+    <div class="card">
+      <div class="card-label">One-off Package</div>
+<pre style="margin:0"><code>{
+  <span class="key">PackageId</span>   = <span class="num">7455682</span>,
+  <span class="key">PackageName</span> = <span class="str">"$100,000 Bank"</span>,
+  <span class="key">Items</span> = {
+    { <span class="key">type</span>=<span class="str">"account"</span>, <span class="key">name</span>=<span class="str">"bank"</span>, <span class="key">amount</span>=<span class="num">100000</span>, <span class="key">label</span>=<span class="str">"$100,000 Bank"</span> },
+  },
+}</code></pre>
+    </div>
+    <div class="card">
+      <div class="card-label">Milestones — loyalty rewards after N months</div>
+<pre style="margin:0"><code>Config.Milestones = {
+  benfeitor = {
+    [<span class="num">3</span>] = { { <span class="key">type</span>=<span class="str">"item"</span>,     <span class="key">name</span>=<span class="str">"lockpick"</span>, <span class="key">amount</span>=<span class="num">10</span> } },
+    [<span class="num">6</span>] = { { <span class="key">type</span>=<span class="str">"physical"</span>, <span class="key">label</span>=<span class="str">"TW T-Shirt"</span> } },
+  },
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- locales -->
+  <div class="page" id="page-locales">
+    <div class="s-title">Locales / i18n</div>
+    <p class="s-sub">Set <code>Config.Locale</code> in <code>shared/config.lua</code>. Sub-locales fall back automatically: <code>pt-br → pt → en</code>.</p>
+    <pre><code>Config.Locale = <span class="str">"pt"</span></code></pre>
+    <div class="lang-wrap">
+      <span class="lang-pill"><span class="l-code">en</span> English</span>
+      <span class="lang-pill"><span class="l-code">pt</span> Portuguese (PT)</span>
+      <span class="lang-pill"><span class="l-code">pt-br</span> Portuguese (BR)</span>
+      <span class="lang-pill"><span class="l-code">es</span> Spanish</span>
+      <span class="lang-pill"><span class="l-code">de</span> German</span>
+      <span class="lang-pill"><span class="l-code">fr</span> French</span>
+      <span class="lang-pill"><span class="l-code">pl</span> Polish</span>
+      <span class="lang-pill"><span class="l-code">ru</span> Russian</span>
+      <span class="lang-pill"><span class="l-code">tr</span> Turkish</span>
+      <span class="lang-pill"><span class="l-code">nl</span> Dutch</span>
+      <span class="lang-pill"><span class="l-code">sv</span> Swedish</span>
+      <span class="lang-pill"><span class="l-code">zh</span> Chinese</span>
+      <span class="lang-pill"><span class="l-code">ja</span> Japanese</span>
+      <span class="lang-pill"><span class="l-code">it</span> Italian</span>
+      <span class="lang-pill"><span class="l-code">ro</span> Romanian</span>
+    </div>
+    <p style="margin-top:.7rem">To add a new language, create <code>locales/xx.lua</code> with all keys from <code>locales/en.lua</code>. All 18 keys must be present or they fall back to English.</p>
+  </div>
+
+  <!-- groups -->
+  <div class="page" id="page-groups">
+    <div class="s-title">Groups &amp; Permissions</div>
+    <p class="s-sub">Independent DB-backed system — no ESX/QB dependency. Cache populated on join, cleared on drop.</p>
+    <div class="exp-list">
+      <div class="exp-item"><div class="exp-sig">exports.tw_tebexstore:SetGroup(source, group)</div><div class="exp-desc">Grant a group. Writes DB, updates cache, fires <code>tw_tebexstore:groupSet</code>.</div></div>
+      <div class="exp-item"><div class="exp-sig">exports.tw_tebexstore:RevokeGroup(source, group)</div><div class="exp-desc">Remove a group. Deletes from DB and cache, fires <code>tw_tebexstore:groupRevoked</code>.</div></div>
+      <div class="exp-item"><div class="exp-sig">exports.tw_tebexstore:HasGroup(source, group) → boolean</div><div class="exp-desc">Cache hit — no DB call. Ideal for ACL checks.</div></div>
+      <div class="exp-item"><div class="exp-sig">exports.tw_tebexstore:GetPlayerGroups(source) → string[]</div><div class="exp-desc">Returns all groups the player currently holds.</div></div>
+    </div>
+    <div class="tbl-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>DB Table</th><th>Columns</th></tr></thead>
+        <tbody>
+          <tr><td><span class="td-k">tw_permissions</span></td><td><code>identifier</code>, <code>group</code>, <code>granted_at</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- events -->
+  <div class="page" id="page-events">
+    <div class="s-title">Events Reference</div>
+    <p class="s-sub">Server-side events fired by tw-tebexstore. Listen in any resource.</p>
+    <div class="ev-list">
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:customReward</div><div class="ev-params">(src, type, amount, label)</div><div class="ev-desc">Fired for custom types with no handler in <code>Config.RewardHandlers</code>.</div></div>
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:revokeSubscription</div><div class="ev-params">(src, identifier, tierId, reason)</div><div class="ev-desc">Tier cancelled or refunded. <code>src = -1</code> if player is offline.</div></div>
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:revokePackage</div><div class="ev-params">(src, identifier, packageName, reason)</div><div class="ev-desc">One-off package refunded/charged back.</div></div>
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:revokeReward</div><div class="ev-params">(src, type, amount, label, identifier)</div><div class="ev-desc">Every individual reward during any revoke. Use for audit logs.</div></div>
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:groupSet</div><div class="ev-params">(src, identifier, group)</div><div class="ev-desc">Fired after a group is granted.</div></div>
+      <div class="ev-row"><div class="ev-name">tw_tebexstore:groupRevoked</div><div class="ev-params">(src, identifier, group)</div><div class="ev-desc">Fired after a group is removed.</div></div>
+    </div>
+<pre><code>AddEventHandler(<span class="str">'tw_tebexstore:revokeSubscription'</span>,
+<span class="kw">function</span>(src, identifier, tierId, reason)
+    <span class="kw">if</span> tierId == <span class="str">'prestigio'</span> <span class="kw">then</span>
+        exports[<span class="str">'your_whitelist'</span>]:Remove(identifier)
+    <span class="kw">end</span>
+<span class="kw">end</span>)</code></pre>
+  </div>
+
+  <!-- garage -->
+  <div class="page" id="page-garage">
+    <div class="s-title">Garage Bridge</div>
+    <p class="s-sub">Vehicles are inserted directly into the garage database — no client-side spawn needed. The bridge in <code>shared/garage.lua</code> auto-detects the system.</p>
+    <div class="grid2">
+      <div class="g-card"><div class="g-type">jg</div><div class="g-name">jg-advancedgarages</div><div class="g-desc">Inserts into <code>jg_garages_vehicles</code>. Recommended for modern setups.</div></div>
+      <div class="g-card"><div class="g-type">cd</div><div class="g-name">cd_garage</div><div class="g-desc">Inserts into <code>cd_garage_vehicles</code>.</div></div>
+      <div class="g-card"><div class="g-type">default</div><div class="g-name">Framework default</div><div class="g-desc">ESX → <code>owned_vehicles</code>. QB → <code>player_vehicles</code>.</div></div>
+    </div>
+    <pre><code>Config.GarageSystem    = <span class="str">"auto"</span>     <span class="cmt">-- auto | jg | cd | default</span>
+Config.CarRewardGarage = <span class="str">"legion"</span>   <span class="cmt">-- must match a garage ID in your system</span>
+<span class="cmt">-- Reward entry:</span>
+{ <span class="key">type</span>=<span class="str">"car"</span>, <span class="key">model</span>=<span class="str">"sultanrs"</span>, <span class="key">label</span>=<span class="str">"Sultan RS"</span> }</code></pre>
+    <div class="callout tip"><span>✓</span><span>The plate is auto-generated using <code>Config.LicensePlateLetters</code> / <code>Config.LicensePlateNumbers</code> and checked for uniqueness against the DB.</span></div>
+  </div>
+
+</main>
+
+<!-- RIGHT SIDEBAR -->
+<aside class="sb-r">
+  <div class="sb-r-head"><div class="sb-r-title">On this page</div></div>
+  <div class="sb-r-scroll" id="sbr-content">
+    <!-- populated by JS per page -->
+  </div>
+</aside>
+
+<script>
+/* ── Theme ── */
+let dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
+try { const s = localStorage.getItem('tw-theme'); if(s) dark = s==='dark'; } catch(e){}
+function applyTheme(d){ document.documentElement.setAttribute('data-theme', d?'dark':'light'); document.getElementById('ti').textContent = d?'☀':'◑'; }
+function toggleTheme(){ dark=!dark; applyTheme(dark); try{localStorage.setItem('tw-theme',dark?'dark':'light');}catch(e){} }
+applyTheme(dark);
+
+/* ── Right sidebar content per page ── */
+const SBR = {
+  intro: `
+    <div class="ctx-block">
+      <div class="ctx-label">Quick Links</div>
+      <div class="ctx-item"><div class="ctx-sig">Installation guide</div><div class="ctx-desc">4 steps to get the resource running on your server.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">Config options</div><div class="ctx-desc">All settings with defaults and explanations.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Webhook Commands</div>
+      <div class="ctx-item"><div class="ctx-sig">purchase_package_tebex</div><div class="ctx-desc">Triggered by Tebex on successful purchase.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">revoke_package_tebex</div><div class="ctx-desc">Triggered on refund / chargeback / removal.</div></div>
+    </div>`,
+  reqs: `
+    <div class="ctx-block">
+      <div class="ctx-label">DB Tables</div>
+      <div class="ctx-item"><div class="ctx-sig">tw_subscriptions</div></div>
+      <div class="ctx-item"><div class="ctx-sig">tw_transaction_log</div></div>
+      <div class="ctx-item"><div class="ctx-sig">tw_milestones_claimed</div></div>
+      <div class="ctx-item"><div class="ctx-sig">tw_physical_claims</div></div>
+      <div class="ctx-item"><div class="ctx-sig">tw_permissions</div></div>
+    </div>`,
+  install: `
+    <div class="ctx-block">
+      <div class="ctx-label">Files</div>
+      <div class="ctx-item"><div class="ctx-sig">[INSTALL]/database.sql</div><div class="ctx-desc">Run once to create all tables.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">shared/config.lua</div><div class="ctx-desc">Main configuration file.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Note</div>
+      <div class="ctx-item"><div class="ctx-desc"><code>oxmysql</code> must be <strong>ensured before</strong> this resource in server.cfg.</div></div>
+    </div>`,
+  config: `
+    <div class="ctx-block">
+      <div class="ctx-label">Inventory Options</div>
+      <div class="ctx-item"><div class="ctx-sig">ox</div><div class="ctx-desc">ox_inventory — SetMaxWeight + images.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">qs</div><div class="ctx-desc">qs-inventory.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">native</div><div class="ctx-desc">Framework built-in.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">custom</div><div class="ctx-desc">Custom export bridge.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Garage Options</div>
+      <div class="ctx-item"><div class="ctx-sig">jg / cd / default</div><div class="ctx-desc">See Garage Bridge page.</div></div>
+    </div>`,
+  rewards: `
+    <div class="ctx-block">
+      <div class="ctx-label">Fallback Event</div>
+      <div class="ctx-item"><div class="ctx-sig">tw_tebexstore:customReward</div><div class="ctx-desc">(src, type, amount, label) — fired when no handler is defined.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Image Override</div>
+      <div class="ctx-item"><div class="ctx-desc">Add <code>image = "img/file.png"</code> to any reward to override the store UI icon.</div></div>
+    </div>`,
+  handlers: `
+    <div class="ctx-block">
+      <div class="ctx-label">Handler Shape</div>
+      <div class="ctx-item"><div class="ctx-sig">grant(src, amount)</div><div class="ctx-desc">Called on purchase.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">revoke(src, amount)</div><div class="ctx-desc">Called on cancellation/refund. Optional.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Also Fires</div>
+      <div class="ctx-item"><div class="ctx-sig">tw_tebexstore:revokeReward</div><div class="ctx-desc">(src, type, amount, label, identifier) — even when a handler runs.</div></div>
+    </div>`,
+  tiers: `
+    <div class="ctx-block">
+      <div class="ctx-label">Tier Fields</div>
+      <div class="ctx-item"><div class="ctx-sig">id</div><div class="ctx-desc">Unique key. Used in DB and Milestones.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">PackageId</div><div class="ctx-desc">Numeric Tebex ID — stable across renames.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">Group</div><div class="ctx-desc">Granted while subscription is active.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">MaxWeight</div><div class="ctx-desc">In grams, applied via ox_inventory.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Reward Timing</div>
+      <div class="ctx-item"><div class="ctx-sig">FirstPurchaseRewards</div><div class="ctx-desc">Once, on very first payment.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">RenewalRewards</div><div class="ctx-desc">Month 2, 3, 4… (not first).</div></div>
+      <div class="ctx-item"><div class="ctx-sig">Items</div><div class="ctx-desc">Every payment including first.</div></div>
+    </div>`,
+  locales: `
+    <div class="ctx-block">
+      <div class="ctx-label">Fallback Chain</div>
+      <div class="ctx-item"><div class="ctx-desc"><code>pt-br</code> → <code>pt</code> → <code>en</code> → key itself. Never errors.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">_T() Function</div>
+      <div class="ctx-item"><div class="ctx-sig">_T(key, ...)</div><div class="ctx-desc">Returns translated string, format args supported. Defined in <code>shared/locale.lua</code>.</div></div>
+    </div>`,
+  groups: `
+    <div class="ctx-block">
+      <div class="ctx-label">Exports</div>
+      <span class="ctx-chip chip-exp">SetGroup</span>
+      <span class="ctx-chip chip-exp">RevokeGroup</span>
+      <span class="ctx-chip chip-exp">HasGroup</span>
+      <span class="ctx-chip chip-exp">GetPlayerGroups</span>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Events</div>
+      <span class="ctx-chip chip-ev">groupSet</span>
+      <span class="ctx-chip chip-ev">groupRevoked</span>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">DB</div>
+      <span class="ctx-chip chip-db">tw_permissions</span>
+    </div>`,
+  events: `
+    <div class="ctx-block">
+      <div class="ctx-label">Purchase Events</div>
+      <div class="ctx-item"><div class="ctx-sig">tw_tebexstore:customReward</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Revoke Events</div>
+      <div class="ctx-item"><div class="ctx-sig">:revokeSubscription</div></div>
+      <div class="ctx-item"><div class="ctx-sig">:revokePackage</div></div>
+      <div class="ctx-item"><div class="ctx-sig">:revokeReward</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Group Events</div>
+      <div class="ctx-item"><div class="ctx-sig">:groupSet</div></div>
+      <div class="ctx-item"><div class="ctx-sig">:groupRevoked</div></div>
+    </div>`,
+  garage: `
+    <div class="ctx-block">
+      <div class="ctx-label">Plate Config</div>
+      <div class="ctx-item"><div class="ctx-sig">Config.SpaceInLicensePlate</div><div class="ctx-desc">false → "ABC123", true → "ABC 123".</div></div>
+      <div class="ctx-item"><div class="ctx-sig">Config.LicensePlateLetters</div><div class="ctx-desc">Default 3.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">Config.LicensePlateNumbers</div><div class="ctx-desc">Default 3.</div></div>
+    </div>
+    <div class="ctx-block">
+      <div class="ctx-label">Systems</div>
+      <div class="ctx-item"><div class="ctx-sig">jg-advancedgarages</div><div class="ctx-desc">jg_garages_vehicles</div></div>
+      <div class="ctx-item"><div class="ctx-sig">cd_garage</div><div class="ctx-desc">cd_garage_vehicles</div></div>
+      <div class="ctx-item"><div class="ctx-sig">default</div><div class="ctx-desc">ESX: owned_vehicles · QB: player_vehicles</div></div>
+    </div>`,
+};
+
+let currentPage = 'intro';
+
+function showPage(id, linkEl) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById('page-'+id);
+  if (pg) { pg.classList.add('active'); currentPage = id; }
+
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (linkEl) linkEl.classList.add('active');
+
+  const sbr = document.getElementById('sbr-content');
+  sbr.innerHTML = SBR[id] || '';
+}
+
+/* ── Project accordion ── */
+function toggleProj(id, header) {
+  const nav = document.getElementById('nav-'+id);
+  const arrow = document.getElementById('arrow-'+id);
+  const open = nav.classList.contains('open');
+  nav.classList.toggle('open', !open);
+  arrow.classList.toggle('open', !open);
+}
+
+/* ── Search ── */
+function doSearch(q) {
+  q = q.trim().toLowerCase();
+  document.querySelectorAll('.nav-link').forEach(l => {
+    const txt = l.textContent.toLowerCase();
+    const pg = l.getAttribute('data-page') || '';
+    const match = !q || txt.includes(q) || pg.includes(q);
+    l.classList.toggle('hidden-search', !match);
+  });
+  // keep project open if it has visible results
+  document.querySelectorAll('.proj-nav').forEach(nav => {
+    const id = nav.id.replace('nav-','');
+    const hasVisible = [...nav.querySelectorAll('.nav-link')].some(l => !l.classList.contains('hidden-search'));
+    nav.classList.toggle('open', !q || hasVisible);
+    const arrow = document.getElementById('arrow-'+id);
+    if (arrow) arrow.classList.toggle('open', !q || hasVisible);
+  });
+}
+
+/* Init right sidebar */
+showPage('intro', document.querySelector('.nav-link.active'));
+</script>
