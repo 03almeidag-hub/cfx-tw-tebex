@@ -1,5 +1,6 @@
-local DiscordWebhook = 'https://discord.com/api/webhooks/1492590932594266122/c32QY51VG0NKTDsGPBT0Q_ywNwpoyiVZGQNtINmeMq3K6zqMLy9Nwm-HigJ58ufBnOTm'
+local DiscordWebhook = 'CHANGE_WEBHOOK'
 local inProgress = false
+local inProgressSince = 0
 local NumberCharset = {}
 local Charset = {}
 -- plateQuery is set from Garage.PlateQuery (shared/garage.lua) after shared scripts load
@@ -18,10 +19,15 @@ local function GetRandomLetter(length)
 	return length > 0 and GetRandomLetter(length - 1) .. Charset[math.random(1, #Charset)] or ''
 end
 
-local function GeneratePlate()
+local function GeneratePlate(depth)
+	depth = (depth or 0) + 1
+	if depth > 50 then
+		print('^3[tw_tebexstore]: GeneratePlate: could not find a free plate after 50 tries — using random fallback^0')
+		return ('TW%06d'):format(math.random(100000, 999999)):upper()
+	end
 	local plate = Config.SpaceInLicensePlate and GetRandomLetter(Config.LicensePlateLetters)..' '..GetRandomNumber(Config.LicensePlateNumbers) or GetRandomLetter(Config.LicensePlateLetters) .. GetRandomNumber(Config.LicensePlateNumbers)
 	local result = MySQL.scalar.await(plateQuery, {plate})
-	return result and GeneratePlate() or plate:upper()
+	return result and GeneratePlate(depth) or plate:upper()
 end
 
 local DISCORD_NAME = "tw_tebexstore"
@@ -45,7 +51,7 @@ local function LogEvent(name, message, color)
 					},
 				}
 			}
-			PerformHttpRequest(DiscordWebhook, function() end, 'POST', json.encode({username = DISCORD_NAME, embeds = connect, avatarrl = DISCORD_IMAGE}), { ['Content-Type'] = 'application/json' })
+			PerformHttpRequest(DiscordWebhook, function() end, 'POST', json.encode({username = DISCORD_NAME, embeds = connect, avatar_url = DISCORD_IMAGE}), { ['Content-Type'] = 'application/json' })
 		end
 	end
 
@@ -58,9 +64,6 @@ local function LogEvent(name, message, color)
 				metadata = { color = color },
 			})
 		end)
-		if not ok then
-			print('[tw_tebexstore]: Failed to send log to tw_logs. Check the export name/signature matches your tw_logs version.')
-		end
 	end
 end
 
@@ -444,8 +447,9 @@ local function RedeemTransaction(source, encode, cb)
 	end)
 end
 
-RegisterCommand('redeem', function(source, _, rawCommand)
-	local encode = rawCommand:sub(8)
+RegisterCommand('redeem', function(source, args)
+	local encode = args[1]
+	if not encode or encode == '' then return end
 	RedeemTransaction(source, encode)
 end, false)
 
@@ -587,12 +591,29 @@ end
 -- Expiry sweep
 -- ============================================================
 
+local function GetSourceByIdentifier(identifier)
+	for _, playerId in ipairs(GetPlayers()) do
+		for _, id in ipairs(GetPlayerIdentifiers(playerId)) do
+			if id == identifier then return tonumber(playerId) end
+		end
+	end
+	return nil
+end
+
 CreateThread(function()
 	while true do
 		Wait(Config.ExpiryCheckInterval * 60 * 1000)
 		local expired = MySQL.query.await("SELECT * FROM tw_subscriptions WHERE status = 'active' AND expires_at < NOW()") or {}
 		for _, sub in pairs(expired) do
 			MySQL.update('UPDATE tw_subscriptions SET status = ? WHERE id = ?', {'expired', sub.id})
+			local playerSource = GetSourceByIdentifier(sub.identifier)
+			if playerSource then
+				local tier = FindTierById(sub.tier)
+				if tier then
+					Groups.Revoke(playerSource, tier.Group)
+					TriggerClientEvent('tw_tebexstore:notify', playerSource, _T('subscription_expired', tier.Label))
+				end
+			end
 			LogEvent('Subscrição Expirada', '**Identifier:** '..sub.identifier..'\n**Tier:** '..sub.tier, 15158332)
 		end
 	end
@@ -607,9 +628,15 @@ RegisterCommand('purchase_package_tebex', function(source, args)
 		local packageKey = dec.packageid or dec.packagename
 		local packTab = {}
 		while inProgress do
+			if GetGameTimer() - inProgressSince > 30000 then
+				print('^3[tw_tebexstore]: inProgress lock timed out — resetting^0')
+				inProgress = false
+				break
+			end
 			Wait(1000)
 		end
 		inProgress = true
+		inProgressSince = GetGameTimer()
 		MySQL.query('SELECT * FROM codes WHERE code = @playerCode', {['@playerCode'] = tbxid}, function(result)
 			if result[1] then
 				local packagetable = json.decode(result[1].packagename)
@@ -662,9 +689,15 @@ RegisterCommand('revoke_package_tebex', function(source, args)
 	local reason = dec.reason or 'unknown'
 
 	while inProgress do
+		if GetGameTimer() - inProgressSince > 30000 then
+			print('^3[tw_tebexstore]: inProgress lock timed out — resetting^0')
+			inProgress = false
+			break
+		end
 		Wait(1000)
 	end
 	inProgress = true
+	inProgressSince = GetGameTimer()
 
 	-- If the code hasn't been redeemed yet, just strip this package out of the pending code so it
 	-- can no longer be claimed.

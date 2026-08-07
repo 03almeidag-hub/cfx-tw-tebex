@@ -37,23 +37,31 @@ Contributions and pull requests should be made through GitHub. All feedback is w
 - Discord logs
 - Easily configurable
 
-**Added in this version:**
+## ✨ Features
+
+### 🖥️ In-Game Store UI
 - Own UI (`/store`) — players see their active subscription, items received, perks, loyalty milestones and transaction history, and can redeem a Transaction ID without leaving the game (chat command `/redeem [Transaction ID]` still works as a fallback)
+- Configurable UI colour theme — `Config.UIColors { primary, accent, glow }` in `shared/config.lua`, applied at runtime without a resource restart
+- Configurable logo and hero banner — `Config.UILogo` (60×60 px) and `Config.UIHeroBanner` set in config, no source edits needed
+- Multilingual store interface — 40 locale keys across 15 languages (en, pt, pt-BR, es, de, fr, pl, ru, tr, nl, sv, zh, ja, it, ro), UI language follows `Config.Locale` automatically, date formatting adapts per locale
+- Fixed panel dimensions (1200×720 px) — layout no longer shifts based on active subscriptions or milestones
+- Semi-transparent panel background with `backdrop-filter: blur`
+
+### 💳 Subscriptions & Rewards
 - Recurring subscriptions (VIP tiers) with automatic active-months tracking, renewal, and automatic expiry when a subscription isn't renewed
+- Subscription expiry now revokes the VIP group immediately for online players instead of waiting for a reconnect
 - Different rewards on first purchase vs. every renewal
-- Loyalty milestones per number of consecutive active months, including **physical** rewards.
-- **Multi-framework**: auto-detects **ESX**, **QBCore** or **QBox**, or can be forced manually
-- **Multi-inventory**: auto-detects **ox_inventory**, **qs-inventory**, or falls back to the framework's native inventory
+- Loyalty milestones per number of consecutive active months, including physical rewards
+
+### 🔌 Compatibility
+- Multi-framework: auto-detects ESX, QBCore or QBox, or can be forced manually
+- Multi-inventory: auto-detects ox_inventory, qs-inventory, or falls back to the framework's native inventory
 - Rewards this script doesn't implement natively (e.g. skill points, third-party store credit) fire an event (`tw_tebexstore:customReward`) for another resource to handle
+
+### 🔒 Logging & Security
 - Redeem attempts are logged to the server console (success/failure), in addition to Discord logs
 - Anti-exploit protections: the purchase command is only accepted from the console, vehicles are validated by a server-side callback before spawning, and suspicious attempts are reported to Discord
 
-## Compatibility
-
-| | Supported |
-|---|---|
-| Framework | ESX, QBCore, QBox (auto-detected via `Config.Framework = "auto"`, or force `"ESX"` / `"QB"` / `"QBX"`) |
-| Inventory | ox_inventory, qs-inventory, the framework's native inventory (auto-detected) |
 
 ## Installation
 Follow Documentation, [click here](https://cfxtw.vercel.app/).

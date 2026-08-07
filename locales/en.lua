@@ -16,6 +16,7 @@ Locales['en'] = {
 	pending_physical_count   = "%s pending physical rewards (see server console).",
 	usage_shipped            = "Usage: /shipped [id]",
 	physical_marked_shipped  = "Physical reward #%s marked as shipped.",
+	subscription_expired     = "Your %s subscription has expired.",
 	subscription_cancelled   = "Your %s subscription has been cancelled (%s).",
 	framework_not_detected   = "Could not detect a supported framework. Check shared/config.lua.",
 	update_available_chat    = "⚠  Update available: %s\nVisit GitHub to update: %s",

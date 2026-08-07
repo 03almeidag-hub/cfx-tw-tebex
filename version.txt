@@ -1,3 +1,12 @@
+Version: 1.0.2
+Updates:
+ - Fixed avatar_url typo in Discord webhook (bot avatar now shows correctly in Discord logs)
+ - Fixed /redeem argument parsing (extra spaces/missing args no longer cause invalid DB lookups)
+ - Expiry sweep now revokes VIP groups immediately for online players
+ - Added depth limit to GeneratePlate() to eliminate theoretical stack overflow risk
+ - Fixed inProgress lock getting stuck on DB timeout (auto-resets after 30s)
+ - Added subscription_expired locale key to locales/en.lua
+
 Version: 1.0.1
 Updates:
 - Configurable UI colour system (Config.UIColors)
