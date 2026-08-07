@@ -26,6 +26,9 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 </tr>
 </table>
 
+## 🤝 Contributing
+Contributions and pull requests should be made through GitHub. All feedback is welcome — report bugs or suggest improvements by opening an [issue](https://github.com/03almeidag-hub/cfx-tw-tebex/issues).
+
 ## Features
 
 **Inherited from nass_tebexstore:**
