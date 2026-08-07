@@ -1,3 +1,10 @@
+Version: 1.0.1
+Updates:
+- Configurable UI colour system (Config.UIColors)
+- Multilingual store interface (40 new locale keys, 13 languages)
+- Configurable logo & hero banner (Config.UILogo / Config.UIHeroBanner)
+- Store panel visual overhaul (fixed size, glass transparency, crystal corners)
+
 Version: 1.0.0-beta
 Updates:
 - Launch 
