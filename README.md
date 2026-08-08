@@ -1,13 +1,4 @@
 ![TWTebex banner](https://i.postimg.cc/sxh9s08z/Subscription-System.png)
-
-## IMPORTANT
-**Note:** If you're using this project, please download it from the **Releases** page instead of the source code.
-
-The source code archive includes development files that are not required for production, such as documentation, versioning files, and other project resources. The release package contains only the files needed to use the application.
-**If you have experience with React and want to customize the layout or modify the project, download the Source Code version instead and remove the unnecessary files.**
-
-## 
-
 FiveM resource that connects your **Tebex** store to your server: processes purchases automatically, grants items/weapons/vehicles/money, manages **recurring VIP subscriptions** with loyalty-month tracking, and exposes its own in-game interface (`/store`) so players can check what they have and redeem transactions without leaving the game.
 
 > This project is an improved integration built on top of **[nass_tebexstore](https://github.com/najeetpie/nass_tebexstore)** by **najeetpie**. All credit to him for the base Tebex code redemption system — this resource extends that base with subscriptions, loyalty milestones, its own UI, and multi-framework/multi-inventory support.
@@ -28,6 +19,9 @@ Monetize your game server with the same tools used by Hypixel and FiveM. Sell it
 
 ## 🤝 Contributing
 Contributions and pull requests should be made through GitHub. All feedback is welcome — report bugs or suggest improvements by opening an [issue](https://github.com/03almeidag-hub/cfx-tw-tebex/issues).
+
+**Note:** If you're using this project, please download it from the **Releases** page instead of the source code.
+⚠️ Keep in mind that the source code may contain changes that are not yet available for production (features in development, internal testing, etc.). Bug fixes are released immediately in a new patch as soon as they're identified, and you'll be notified directly in the server console whenever an update is available.
 
 ## Features
 
