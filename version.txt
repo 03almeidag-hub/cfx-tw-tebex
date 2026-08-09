@@ -1,3 +1,8 @@
+Version: 1.0.4
+Updates:
+ - Add op-garages compatibility for vehicle rewards
+ - General refactor/overhaul of the enchantments system (code optimization)
+
 Version: 1.0.3
 Updates:
  - Fix TOCTOU race in RedeemTransaction (reward duplication)
