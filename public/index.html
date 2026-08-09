@@ -213,7 +213,7 @@ tr:hover td{background:var(--surface)}
     <div class="tags">
       <span class="tag">ESX</span><span class="tag">QBCore</span><span class="tag">QBox</span>
       <span class="tag">ox_inventory</span><span class="tag">qs-inventory</span>
-      <span class="tag">jg-advancedgarages</span><span class="tag">oxmysql</span>
+      <span class="tag">jg-advancedgarages</span><span class="tag">cd_garage</span><span class="tag">op_garage</span><span class="tag">oxmysql</span>
     </div>
     <div class="grid2" style="margin-top:1.4rem">
       <div class="g-card"><div class="g-name">Tiers</div><div class="g-desc">Recurring subscriptions with first-purchase, renewal, and per-payment rewards.</div></div>
@@ -234,6 +234,7 @@ tr:hover td{background:var(--surface)}
       <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">qs-inventory</div><div class="g-desc">Item and weapon grants.</div></div>
       <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">jg-advancedgarages</div><div class="g-desc">Direct DB insert for vehicle rewards.</div></div>
       <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">cd_garage</div><div class="g-desc">Alternative garage bridge.</div></div>
+      <div class="g-card"><div class="g-type" style="color:#86efac;background:rgba(34,197,94,.08)">optional</div><div class="g-name">op_garage</div><div class="g-desc">Uses framework tables + <code>vehicleGarage</code> index.</div></div>
     </div>
   </div>
 
@@ -272,8 +273,8 @@ revoke_package_tebex <span class="str">{"transid":"{transaction}","packageid":{p
           <tr><td><span class="td-k">Config.StoreCommand</span></td><td><span class="td-d">"loja"</span></td><td>Command to open the store UI.</td></tr>
           <tr><td><span class="td-k">Config.SubscriptionDays</span></td><td><span class="td-d">30</span></td><td>Days one payment covers.</td></tr>
           <tr><td><span class="td-k">Config.ExpiryCheckInterval</span></td><td><span class="td-d">5</span></td><td>Minutes between expiry sweeps.</td></tr>
-          <tr><td><span class="td-k">Config.CarRewardGarage</span></td><td><span class="td-d">"legion"</span></td><td>Garage ID where vehicle rewards land.</td></tr>
-          <tr><td><span class="td-k">Config.GarageSystem</span></td><td><span class="td-d">"auto"</span></td><td>Force: <code>"jg"</code>, <code>"cd"</code>, <code>"default"</code>.</td></tr>
+          <tr><td><span class="td-k">Config.CarRewardGarage</span></td><td><span class="td-d">"legion"</span></td><td>Garage where vehicle rewards land. For <code>"op"</code> this must be a <strong>number</strong> (the garage Index), e.g. <code>1</code>.</td></tr>
+          <tr><td><span class="td-k">Config.GarageSystem</span></td><td><span class="td-d">"auto"</span></td><td>Force: <code>"jg"</code>, <code>"cd"</code>, <code>"op"</code>, <code>"default"</code>.</td></tr>
           <tr><td><span class="td-k">Config.InventorySystem</span></td><td><span class="td-d">"auto"</span></td><td>Force: <code>"ox"</code>, <code>"qs"</code>, <code>"native"</code>, <code>"custom"</code>.</td></tr>
           <tr><td><span class="td-k">Config.DiscordLogs</span></td><td><span class="td-d">true</span></td><td>Enable Discord webhook logging.</td></tr>
           <tr><td><span class="td-k">Config.UseOxInventoryImages</span></td><td><span class="td-d">"auto"</span></td><td>Use ox item images in UI. Override per-item with <code>image = "…"</code>.</td></tr>
@@ -449,12 +450,14 @@ revoke_package_tebex <span class="str">{"transid":"{transaction}","packageid":{p
     <div class="grid2">
       <div class="g-card"><div class="g-type">jg</div><div class="g-name">jg-advancedgarages</div><div class="g-desc">Inserts into <code>jg_garages_vehicles</code>. Recommended for modern setups.</div></div>
       <div class="g-card"><div class="g-type">cd</div><div class="g-name">cd_garage</div><div class="g-desc">Inserts into <code>cd_garage_vehicles</code>.</div></div>
+      <div class="g-card"><div class="g-type">op</div><div class="g-name">op_garage</div><div class="g-desc">No own table — uses framework tables with the <code>vehicleGarage</code> index. QB: <code>vehicle</code>=model, <code>hash</code>, <code>mods</code>=props. ESX: <code>vehicle</code>=props.</div></div>
       <div class="g-card"><div class="g-type">default</div><div class="g-name">Framework default</div><div class="g-desc">ESX → <code>owned_vehicles</code>. QB → <code>player_vehicles</code>.</div></div>
     </div>
-    <pre><code>Config.GarageSystem    = <span class="str">"auto"</span>     <span class="cmt">-- auto | jg | cd | default</span>
-Config.CarRewardGarage = <span class="str">"legion"</span>   <span class="cmt">-- must match a garage ID in your system</span>
+    <pre><code>Config.GarageSystem    = <span class="str">"auto"</span>     <span class="cmt">-- auto | jg | cd | op | default</span>
+Config.CarRewardGarage = <span class="str">"legion"</span>   <span class="cmt">-- garage ID in your system (op → a NUMBER, e.g. 1)</span>
 <span class="cmt">-- Reward entry:</span>
 { <span class="key">type</span>=<span class="str">"car"</span>, <span class="key">model</span>=<span class="str">"sultanrs"</span>, <span class="key">label</span>=<span class="str">"Sultan RS"</span> }</code></pre>
+    <div class="callout warn"><span>⚠</span><span><strong>op_garage:</strong> run the op_garage SQL first (it <code>ALTER</code>s <code>player_vehicles</code>), and set <code>Config.CarRewardGarage</code> to a numeric garage <code>Index</code> that exists in <code>opgarages_garages2</code> / <code>opgarages_ownedgarages</code>. A non-numeric value falls back to <code>1</code>.</span></div>
     <div class="callout tip"><span>✓</span><span>The plate is auto-generated using <code>Config.LicensePlateLetters</code> / <code>Config.LicensePlateNumbers</code> and checked for uniqueness against the DB.</span></div>
   </div>
 
@@ -518,7 +521,7 @@ const SBR = {
     </div>
     <div class="ctx-block">
       <div class="ctx-label">Garage Options</div>
-      <div class="ctx-item"><div class="ctx-sig">jg / cd / default</div><div class="ctx-desc">See Garage Bridge page.</div></div>
+      <div class="ctx-item"><div class="ctx-sig">jg / cd / op / default</div><div class="ctx-desc">See Garage Bridge page.</div></div>
     </div>`,
   rewards: `
     <div class="ctx-block">
@@ -606,6 +609,7 @@ const SBR = {
       <div class="ctx-label">Systems</div>
       <div class="ctx-item"><div class="ctx-sig">jg-advancedgarages</div><div class="ctx-desc">jg_garages_vehicles</div></div>
       <div class="ctx-item"><div class="ctx-sig">cd_garage</div><div class="ctx-desc">cd_garage_vehicles</div></div>
+      <div class="ctx-item"><div class="ctx-sig">op_garage</div><div class="ctx-desc">framework tables + vehicleGarage (Index)</div></div>
       <div class="ctx-item"><div class="ctx-sig">default</div><div class="ctx-desc">ESX: owned_vehicles · QB: player_vehicles</div></div>
     </div>`,
 };

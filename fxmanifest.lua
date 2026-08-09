@@ -1,6 +1,3 @@
-fx_version 'cerulean'
-game 'gta5'
-
 -- ============================================================================
 --  TW-TebexStore | Tebex Store Reward Redemption System
 -- ============================================================================
@@ -12,15 +9,14 @@ game 'gta5'
 --  they comply with the FiveM ToS (https://fivem.net/terms) and Tebex's
 --  policies (https://www.tebex.io/terms). This includes rules around pay-to-win
 --  mechanics, prohibited items, and platform-specific monetization guidelines.
---
---  Note: Items considered "merchandise" (e.g. branded/exclusive cosmetic
---  items, etc.) CANNOT be sold directly as Tebex store packages, but can be
---  distributed as redeemable rewards through this system at your discretion.
 -- ============================================================================
+
+fx_version 'cerulean'
+game 'gta5'
 
 author '.tribalwars <https://github.com/03almeidag-hub>'
 description 'Tebex Store Reward Redemption System - TW-TebexStore'
-version '1.0.3'
+version '1.0.4'
 credits 'najeetpie - https://github.com/najeetpie/nass_tebexstore'
 
 shared_scripts {

@@ -23,8 +23,9 @@ Config.ExpiryCheckInterval = 5     -- Minutes between expired-subscription sweep
 Config.SpaceInLicensePlate = false    -- true → "ABC 123", false → "ABC123"
 Config.LicensePlateLetters = 3
 Config.LicensePlateNumbers = 3
-Config.CarRewardGarage     = "legion" -- Garage ID where purchased cars land (must exist in your garage resource)
-Config.GarageSystem        = "auto"   -- "auto" (recommended), or force: "jg", "cd", "default"
+Config.CarRewardGarage     = "legion" -- Garage where purchased cars land (must exist in your garage resource).
+                                      -- For "op" (op_garage) this MUST be a NUMBER (the garage Index), e.g. 1
+Config.GarageSystem        = "auto"   -- "auto" (recommended), or force: "jg", "cd", "op", "default"
 
 -- Inventory
 Config.InventorySystem = "auto"  -- "auto" (recommended), or force: "ox", "qs", "native", "custom"
